@@ -36,22 +36,22 @@ class Angel(object):
     Angel: Advanced Network Groups Estimate and Localization (igraph implementation)
     """
 
-    def __init__(self, network_filename, tpr_threshold=0.25, min_comsize=3, save=False, outfile_name=""):
+    def __init__(self, network_filename, threshold=0.25, min_comsize=3, save=False, outfile_name=""):
         """
         Constructor
 
         :param network_filename: the .ncol network file
-        :param tpr_threshold: the tolerance required in order to merge communities
+        :param threshold: the tolerance required in order to merge communities
         :param min_comsize: minimum desired community size
         :param outfile_name: desired output file name
         :param save: (True|False) whether output the result on file or not
         """
 
         self.__read_graph(network_filename)
-        self.tpr_threshold = tpr_threshold
+        self.threshold = threshold
 
-        if self.tpr_threshold < 1:
-            self.min_community_size = max([3, min_comsize, int(1. / (1 - self.tpr_threshold))])
+        if self.threshold < 1:
+            self.min_community_size = max([3, min_comsize, int(1. / (1 - self.threshold))])
         else:
             self.min_community_size = min_comsize
 
@@ -304,7 +304,7 @@ class Angel(object):
         """
         data = Counter(lst)
 
-        idxs = {k: None for k in data if float(data[k]) / actual_com_size > self.tpr_threshold}
+        idxs = {k: None for k in data if float(data[k]) / actual_com_size > self.threshold}
         if cid in idxs:
             del idxs[cid]
 
@@ -439,7 +439,7 @@ if __name__ == "__main__":
     parser.add_argument('-o', '--out_file', type=str, help='output file', default="angels_coms.txt")
 
     args = parser.parse_args()
-    an = Angel(args.network_file, tpr_threshold=args.threshold,
+    an = Angel(args.network_file, threshold=args.threshold,
                min_comsize=args.min_com_size, outfile_name=args.out_file)
 
     an.execute()
