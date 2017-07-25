@@ -15,14 +15,14 @@ node_id0    node_id1
 ```
 
 # Execution
-Demon is written in python and requires the following package to run:
+Angel is written in python and requires the following package to run:
 - python 2.7.10
-- igraph
-- random
-- time
-- sys
+- igraph/networkx
+- tqdm
 
 The algorithm can be used as standalone program as well as integrated in python scripts.
+
+Both an igraph (iAngel.py) and a networkx (Angel.py) implementations are provided.
 
 ## Standalone
 
@@ -40,7 +40,8 @@ where:
 The explicit removal version does not expose the ttl parameter.
 
 ## As python library
-```bash
+
+```python
 import Angel as a
 an = t.Angel("filename.ncol", epsilon=0.25, min_com_size=3, out_filename="communities.txt")
 an.execute()
