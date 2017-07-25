@@ -1,5 +1,5 @@
 import random
-import networkx as nx
+import igraph
 import numpy as np
 import sys
 import time
@@ -37,7 +37,7 @@ class Angel(object):
     Angel: Advanced Network Groups Estimate and Localization (igraph implementation)
     """
 
-    def __init__(self, network_filename, threshold=0.25, min_comsize=3, save=False, outfile_name=""):
+    def __init__(self, network_filename, threshold=0.25, min_comsize=3, save=True, outfile_name=""):
         """
         Constructor
 
@@ -61,7 +61,7 @@ class Angel(object):
 
         self.save = save
         self.outfile_name = outfile_name
-        self.total_nodes = nx.number_of_nodes(self.G)
+        self.total_nodes = self.G.vcount()
         self.actual_id = self.total_nodes + 1
 
         # Additional data structures
@@ -76,7 +76,7 @@ class Angel(object):
         :param network_filename: complete path for the .ncol file
         :return: an undirected igraph network
         """
-        self.G = nx.read_edgelist(network_filename, nodetype=int)
+        self.G = igraph.Graph.Read_Ncol(network_filename, directed=False)
 
     @timeit
     def execute(self):
@@ -86,10 +86,10 @@ class Angel(object):
         :return: a dictionary <node, community_list>
         """
 
-        for ego in tqdm.tqdm(self.G.nodes(),  ncols=35, bar_format='Exec: {l_bar}{bar}'):
+        for ego in tqdm.tqdm(range(0, self.total_nodes), ncols=35, bar_format='Exec: {l_bar}{bar}'):
 
             # ego_minus_ego node set
-            ego_minus_ego_nodes = nx.ego_graph(self.G, ego, 1, False).nodes()
+            ego_minus_ego_nodes = set(self.G.neighborhood(ego, 1, mode="ALL")) - {ego}
             if len(ego_minus_ego_nodes) >= self.min_community_size:
                 community_to_nodes = self.__overlapping_label_propagation(ego_minus_ego_nodes)
 
@@ -113,8 +113,9 @@ class Angel(object):
             out_file_com = open(self.outfile_name, "w")
             idc = 0
             for c in self.all_communities.values():
-                if len(c) >= self.min_community_size:
-                    out_file_com.write("%d\t%s\n" % (idc, str(sorted(c))))
+                ls = [int(self.G.vs[x]['name']) for x in c]
+                if len(ls) >= self.min_community_size:
+                    out_file_com.write("%d\t%s\n" % (idc, str(sorted(ls))))
                     idc += 1
             out_file_com.flush()
             out_file_com.close()
@@ -129,7 +130,7 @@ class Angel(object):
 
         com_sorted = sorted(self.all_communities, key=lambda k: len(self.all_communities[k]))
 
-        for c in tqdm.tqdm(com_sorted,  ncols=35, bar_format='Clean %s: {l_bar}{bar}' % it):
+        for c in tqdm.tqdm(com_sorted, ncols=35, bar_format='Clean %s: {l_bar}{bar}' % it):
             self.__tpr_merge({c: self.all_communities[c]}, clean=True)
 
     def __tpr_merge(self, community_to_nodes, clean=False):
@@ -151,8 +152,9 @@ class Angel(object):
             # compute community label frequencies
             comsids = []
             for node in actual_community:
-                if node in self.node2com:
-                    comsids.extend(list(set(self.node2com[node])))
+                node = self.G.vs[node]
+                if node.index in self.node2com:
+                    comsids.extend(list(set(self.node2com[node.index])))
 
             flag = False
             if len(comsids) > 0:
@@ -160,11 +162,13 @@ class Angel(object):
                 maxid_set = self.__tpr_filter(len(actual_community), comsids, c)
 
                 if len(maxid_set) > 0:
+
                     # cycle over merging candidates
                     for current_maxid in maxid_set:
 
                         # adjust community membership
                         for nid in actual_community:
+                            nid = self.G.vs[nid].index
 
                             if nid in self.node2com:
                                 s = self.node2com[nid]
@@ -176,9 +180,7 @@ class Angel(object):
                                 self.node2com[nid] = {current_maxid: None}
 
                         maxid_com = self.all_communities[current_maxid]
-
                         nc = list((set(maxid_com) | set(actual_community)))
-
                         self.all_communities[current_maxid] = nc
 
                         if clean and c in self.all_communities:
@@ -189,10 +191,76 @@ class Angel(object):
             if not flag and not clean:
                 self.all_communities[c] = actual_community
                 for node in actual_community:
-                    if node in self.node2com:
-                        self.node2com[node][c] = None
+                    node = self.G.vs[node]
+                    if node.index in self.node2com:
+                        self.node2com[node.index][c] = None
                     else:
-                        self.node2com[node] = {c: None}
+                        self.node2com[node.index] = {c: None}
+
+    def __f1_merge(self, community_to_nodes, clean=False):
+        """
+        Apply F1-merge to ego-network based micro communities
+
+        :param community_to_nodes: dictionary <community_id, node_list>
+        :param clean: (True|False) whether the method is called for the cleaning stage or not
+        """
+
+        # cycle over micro communities
+        for c in community_to_nodes:
+            actual_community = community_to_nodes[c]
+
+            # check size constraint
+            if len(actual_community) < self.min_community_size:
+                return
+
+            # compute community label frequencies
+            comsids = []
+            for node in actual_community:
+                node = self.G.vs[node]
+                if node.index in self.node2com:
+                    comsids.extend(self.node2com[node.index])
+
+            flag = False
+            if len(comsids) > 0:
+                # identify most frequent community labels
+                maxid_set = list(self.__tpr_filter(len(actual_community), comsids, c))
+
+                if len(maxid_set) > 0:
+
+                    # cycle over merging candidates
+                    for current_maxid in maxid_set:
+
+                        # adjust community membership
+                        for nid in actual_community:
+                            nid = self.G.vs[nid].index
+
+                            if nid in self.node2com:
+                                s = set(self.node2com[nid])
+                                if c in s:
+                                    s = s - {c}
+                                if current_maxid not in s:
+                                    s.add(current_maxid)
+                                self.node2com[nid] = list(set(s))
+                            else:
+                                self.node2com[nid] = [current_maxid]
+
+                        maxid_com = self.all_communities[current_maxid]
+                        nc = list(set(set(maxid_com) | set(actual_community)))
+                        self.all_communities[current_maxid] = nc
+
+                        if clean and c in self.all_communities:
+                            del self.all_communities[c]
+                        flag = True
+
+            # no matching available (and not in the cleaning stage), add the current community
+            if not flag and not clean:
+                self.all_communities[c] = actual_community
+                for node in actual_community:
+                    node = self.G.vs[node]
+                    if node.index in self.node2com:
+                        self.node2com[node.index].append(c)
+                    else:
+                        self.node2com[node.index] = [c]
 
     def __tpr_filter(self, actual_com_size, lst, cid):
         """
@@ -226,7 +294,7 @@ class Angel(object):
         total_nodes = len(ego_minus_ego_nodes)
 
         # set an upper bound to the label propagation iterations
-        max_iteration = max(4, np.log2(total_nodes) + 1)
+        max_iteration = min(7, np.log2(total_nodes) + 1)
 
         while t < max_iteration:
 
@@ -234,6 +302,8 @@ class Angel(object):
             count = -total_nodes
 
             for n in ego_minus_ego_nodes:
+                label_freq = {}
+                n_neighbors = set(self.G.neighbors(n)) & ego_minus_ego_nodes
 
                 # all nodes have stable community assignment
                 if len(skip) == total_nodes:
@@ -242,9 +312,6 @@ class Angel(object):
                 # check if n has a stable community assignment
                 if n in skip:
                     continue
-
-                label_freq = {}
-                n_neighbors = set(nx.neighbors(self.G, n)) & ego_minus_ego_nodes
 
                 if count == 0:
                     t += 1
@@ -324,7 +391,7 @@ if __name__ == "__main__":
     import argparse
 
     print "------------------------------------"
-    print "               Angel                "
+    print "              iAngel                "
     print "------------------------------------"
     print "Author: ", __author__
     print "Email:  ", __contact__
