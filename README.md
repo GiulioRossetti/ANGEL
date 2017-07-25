@@ -17,12 +17,12 @@ node_id0    node_id1
 # Execution
 Angel is written in python and requires the following package to run:
 - python 2.7.10
-- igraph/networkx
+- python-igraph/networkx
 - tqdm
 
 The algorithm can be used as standalone program as well as integrated in python scripts.
 
-Both an igraph (iAngel.py) and a networkx (Angel.py) implementations are provided.
+Both an ``igraph`` (iAngel.py) and a ``networkx`` (Angel.py) implementations are provided.
 
 ## Standalone
 
@@ -43,6 +43,6 @@ The explicit removal version does not expose the ttl parameter.
 
 ```python
 import Angel as a
-an = t.Angel("filename.ncol", epsilon=0.25, min_com_size=3, out_filename="communities.txt")
+an = a.Angel("filename.ncol", epsilon=0.25, min_com_size=3, out_filename="communities.txt")
 an.execute()
 ```
