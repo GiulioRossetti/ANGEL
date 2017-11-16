@@ -1,5 +1,6 @@
 import random
 import igraph
+import future
 import numpy as np
 import sys
 import time
@@ -341,7 +342,7 @@ class Angel(object):
                     labels = []
                     max_freq = -1
 
-                    for l, c in label_freq.iteritems():
+                    for l, c in future.utils.iteritems(label_freq):
                         if c > max_freq:
                             max_freq = c
                             labels = [l]
@@ -390,13 +391,13 @@ class Angel(object):
 if __name__ == "__main__":
     import argparse
 
-    print "------------------------------------"
-    print "              iAngel                "
-    print "------------------------------------"
-    print "Author: ", __author__
-    print "Email:  ", __contact__
-    print "WWW:    ", __website__
-    print "------------------------------------"
+    print("------------------------------------")
+    print("              iAngel                ")
+    print("------------------------------------")
+    print("Author: ", __author__)
+    print("Email:  ", __contact__)
+    print("WWW:    ", __website__)
+    print("------------------------------------")
 
     parser = argparse.ArgumentParser()
 
