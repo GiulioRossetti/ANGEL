@@ -1,6 +1,6 @@
 import random
 import igraph
-import future
+from future.utils import iteritems
 import numpy as np
 import sys
 import time
@@ -20,14 +20,16 @@ def timeit(method):
     :return: the method runtime
     """
 
-    def timed(*arguments, **kw):
+    def timed(*args, **kw):
         ts = time.time()
-        result = method(*arguments, **kw)
+        result = method(*args, **kw)
         te = time.time()
 
-        sys.stdout.write('Time:  %r %2.2f sec\n' % (method.__name__.strip("_"), te - ts))
-        sys.stdout.write('------------------------------------\n')
-        sys.stdout.flush()
+        if args[0].verbose:
+            sys.stdout.write('Time:  %r %2.2f sec\n' % (method.__name__.strip("_"), te - ts))
+            sys.stdout.write('------------------------------------\n')
+            sys.stdout.flush()
+
         return result
 
     return timed
@@ -38,7 +40,8 @@ class Angel(object):
     Angel: Advanced Network Groups Estimate and Localization (igraph implementation)
     """
 
-    def __init__(self, network_filename, threshold=0.25, min_comsize=3, save=True, outfile_name=""):
+    def __init__(self, network_filename, threshold=0.25, min_comsize=3, save=True, outfile_name="",
+                 dyn=False, verbose=True):
         """
         Constructor
 
@@ -49,7 +52,13 @@ class Angel(object):
         :param save: (True|False) whether output the result on file or not
         """
 
-        self.__read_graph(network_filename)
+        self.verbose = verbose
+
+        if dyn is None:
+            self.__read_graph(network_filename)
+        else:
+            self.G = dyn
+
         self.threshold = threshold
 
         if self.threshold < 1:
@@ -57,8 +66,9 @@ class Angel(object):
         else:
             self.min_community_size = min_comsize
 
-        sys.stdout.write("Min. community size: %s\n" % self.min_community_size)
-        sys.stdout.flush()
+        if self.verbose:
+            sys.stdout.write("Min. community size: %s\n" % self.min_community_size)
+            sys.stdout.flush()
 
         self.save = save
         self.outfile_name = outfile_name
@@ -87,7 +97,7 @@ class Angel(object):
         :return: a dictionary <node, community_list>
         """
 
-        for ego in tqdm.tqdm(range(0, self.total_nodes), ncols=35, bar_format='Exec: {l_bar}{bar}'):
+        for ego in tqdm.tqdm(range(0, self.total_nodes), ncols=35, bar_format='Exec: {l_bar}{bar}', disable=not self.verbose):
 
             # ego_minus_ego node set
             ego_minus_ego_nodes = set(self.G.neighborhood(ego, 1, mode="ALL")) - {ego}
@@ -107,20 +117,30 @@ class Angel(object):
             diff = old_csize - actual_csize
             old_csize = actual_csize
             it += 1
-        sys.stdout.write("\n")
+
+        if self.verbose:
+            sys.stdout.write("\n")
+
+        # Node Lookup
+        cms = {}
+        idc = 0
+        for c in self.all_communities.values():
+            ls = [int(self.G.vs[x]['name']) for x in c]
+            if len(ls) >= self.min_community_size:
+                cms[idc] = sorted(ls)
+                idc += 1
 
         # output communities
-        if self.save:
+        if self.save and len(cms) > 0:
             out_file_com = open(self.outfile_name, "w")
-            idc = 0
-            for c in self.all_communities.values():
-                ls = [int(self.G.vs[x]['name']) for x in c]
-                if len(ls) >= self.min_community_size:
-                    out_file_com.write("%d\t%s\n" % (idc, str(sorted(ls))))
-                    idc += 1
+
+            for cid, c in iteritems(cms):
+                out_file_com.write("%d\t%s\n" % (cid, str(c)))
+
             out_file_com.flush()
             out_file_com.close()
-        return self.all_communities
+
+        return cms
 
     def __clean_communities(self, it):
         """
@@ -131,7 +151,7 @@ class Angel(object):
 
         com_sorted = sorted(self.all_communities, key=lambda k: len(self.all_communities[k]))
 
-        for c in tqdm.tqdm(com_sorted, ncols=35, bar_format='Clean %s: {l_bar}{bar}' % it):
+        for c in tqdm.tqdm(com_sorted, ncols=35, bar_format='Clean %s: {l_bar}{bar}' % it, disable=not self.verbose):
             self.__tpr_merge({c: self.all_communities[c]}, clean=True)
 
     def __tpr_merge(self, community_to_nodes, clean=False):
@@ -342,7 +362,7 @@ class Angel(object):
                     labels = []
                     max_freq = -1
 
-                    for l, c in future.utils.iteritems(label_freq):
+                    for l, c in iteritems(label_freq):
                         if c > max_freq:
                             max_freq = c
                             labels = [l]
