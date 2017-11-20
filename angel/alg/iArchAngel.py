@@ -1,10 +1,12 @@
-import iAngel as an
-import igraph
 import sys
 import time
-import tqdm
 from collections import Counter
+
+import igraph
+import tqdm
 from future.utils import iteritems
+
+from angel.alg import iAngel as an
 
 __author__ = "Giulio Rossetti"
 __contact__ = "giulio.rossetti@gmail.com"

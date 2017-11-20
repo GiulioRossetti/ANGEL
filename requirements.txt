@@ -1,0 +1,4 @@
+future==0.16.0
+tqdm==4.17.1
+python-igraph
+networkx
