@@ -21,7 +21,6 @@ class DemonTestCase(unittest.TestCase):
     def test_archangel(self):
         aa = a.ArchAngel("sgraph.txt", threshold=0.4, match_threshold=0.3)
         coms = aa.execute()
-        print(coms)
         self.assertEqual(len(coms), 5)
 
         for f in glob.glob("ArchAngel*"):
