@@ -136,6 +136,8 @@ class ArchAngel(object):
                         for c_future in future:
                             fout.write("%s,%s,%s,%s\n" % (fr, self.slices_ids[t+1], past, c_future))
 
+        return self.snapshot_to_coms
+
     def __tpr_match(self, fr, to):
         """
         Apply F1-merge to ego-network based micro communities

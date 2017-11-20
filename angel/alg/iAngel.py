@@ -40,8 +40,8 @@ class Angel(object):
     Angel: Advanced Network Groups Estimate and Localization (igraph implementation)
     """
 
-    def __init__(self, network_filename, threshold=0.25, min_comsize=3, save=True, outfile_name="",
-                 dyn=False, verbose=True):
+    def __init__(self, network_filename, threshold=0.25, min_comsize=3, save=True, outfile_name="angels_coms.txt",
+                 dyn=None, verbose=True):
         """
         Constructor
 
