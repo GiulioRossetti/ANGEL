@@ -94,7 +94,7 @@ class ArchAngel(object):
                     edge_list = []
 
                     self.slices_ids.append(actual_slice)
-                    yield g, actual_slice
+                    yield g, previous_slice
 
                     previous_slice = actual_slice
 
