@@ -93,7 +93,7 @@ class ArchAngel(object):
                     g.add_edges(edge_list)
                     edge_list = []
 
-                    self.slices_ids.append(actual_slice)
+                    self.slices_ids.append(previous_slice)
                     yield g, previous_slice
 
                     previous_slice = actual_slice
@@ -107,6 +107,7 @@ class ArchAngel(object):
             g = igraph.Graph()
             g.add_vertices(vertices)
             g.add_edges(edge_list)
+            self.slices_ids.append(actual_slice)
             yield g, actual_slice
 
     @timeit
