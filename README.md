@@ -11,6 +11,12 @@ Moreover, we provide also an evolution of Angel, namely **ArchAngel**, designed 
 ## Citation
 If you use our algorithm please cite the following works:
 
+## Installation
+You can easily install the updated version of Angel (and Archangel) by using pip:
+
+```
+pip install git+https://github.com/GiulioRossetti/ANGEL.git
+```
 
 ## Implementation details
 
@@ -41,7 +47,7 @@ Angel is written in python and requires the following package to run:
 
 ```python
 import angel as a
-an = a.Angel(filename, threshold=0.4, min_com_size=3, out_filename="communities.txt")
+an = a.Angel(filename, threshold=0.4, min_comsize=3, outfile_name="angel_communities.txt")
 an.execute()
 ```
 
