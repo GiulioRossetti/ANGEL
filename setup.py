@@ -8,7 +8,7 @@ __email__ = "giulio.rossetti@gmail.com"
 # with open(path.join(here, 'README.md'), encoding='utf-8') as f:
 #    long_description = f.read()
 
-setup(name='angel',
+setup(name='angel_cd',
       version='1.0.1',
       license='BSD-2-Clause',
       description='Community Discovery algorithm',
@@ -35,7 +35,6 @@ setup(name='angel',
           # Specify the Python versions you support here. In particular, ensure
           # that you indicate whether you support Python 2, Python 3 or both.
           'Programming Language :: Python',
-          'Programming Language :: Python :: 2.7',
           'Programming Language :: Python :: 3'
       ],
       keywords=['complex-networks', 'community discovery'],
