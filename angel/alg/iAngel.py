@@ -40,11 +40,12 @@ class Angel(object):
     Angel: Advanced Network Groups Estimate and Localization (igraph implementation)
     """
 
-    def __init__(self, network_filename, threshold=0.25, min_comsize=3, save=True, outfile_name="angels_coms.txt",
+    def __init__(self, network_filename=None, graph=None, threshold=0.25, min_comsize=3, save=True, outfile_name="angels_coms.txt",
                  dyn=None, verbose=True):
         """
         Constructor
 
+        :param graph: an igraph.Graph object
         :param network_filename: the .ncol network file
         :param threshold: the tolerance required in order to merge communities
         :param min_comsize: minimum desired community size
@@ -55,7 +56,10 @@ class Angel(object):
         self.verbose = verbose
 
         if dyn is None:
-            self.__read_graph(network_filename)
+            if graph is None:
+                self.__read_graph(network_filename)
+            else:
+                self.G = graph
         else:
             self.G = dyn
 
@@ -428,7 +432,7 @@ if __name__ == "__main__":
     parser.add_argument('-o', '--out_file', type=str, help='output file', default="angels_coms.txt")
 
     args = parser.parse_args()
-    an = Angel(args.network_file, threshold=args.threshold,
+    an = Angel(args.network_file, graph=None, threshold=args.threshold,
                min_comsize=args.min_com_size, save=args.save, outfile_name=args.out_file)
 
     an.execute()

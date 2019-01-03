@@ -9,7 +9,7 @@ __email__ = "giulio.rossetti@gmail.com"
 #    long_description = f.read()
 
 setup(name='angel',
-      version='1.0.0',
+      version='1.0.1',
       license='BSD-2-Clause',
       description='Community Discovery algorithm',
       url='https://github.com/GiulioRossetti/ANGEL',

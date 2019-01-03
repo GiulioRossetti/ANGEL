@@ -3,6 +3,7 @@ import angel as a
 import os
 import glob
 import networkx as nx
+import igraph as ig
 
 
 class DemonTestCase(unittest.TestCase):
@@ -13,15 +14,26 @@ class DemonTestCase(unittest.TestCase):
 
         an = a.Angel("test.csv", threshold=0.6, min_comsize=3, save=True)
         coms = an.execute()
-        self.assertEqual(len(coms), 4)
+        self.assertEqual(len(coms), 3)
 
         os.remove("test.csv")
+        os.remove("angels_coms.txt")
+
+    def test_angel_OBJ(self):
+        G = nx.karate_club_graph()
+        g = ig.Graph.TupleList(G.edges(), directed=False)
+        g.vs['club'] = list(nx.get_node_attributes(G, 'club').values())
+
+        an = a.Angel(graph=g, threshold=0.6, min_comsize=3, save=True)
+        coms = an.execute()
+        self.assertEqual(len(coms), 3)
+
         os.remove("angels_coms.txt")
 
     def test_archangel(self):
         aa = a.ArchAngel("sgraph.txt", threshold=0.4, match_threshold=0.3)
         coms = aa.execute()
-        self.assertEqual(len(coms), 5)
+        self.assertEqual(len(coms), 6)
 
         for f in glob.glob("ArchAngel*"):
             os.remove(f)

@@ -32,7 +32,7 @@ node_id0    node_id1	snapshot_id
 
 # Execution
 Angel is written in python and requires the following package to run:
-- python 2.7/3.x
+- python 3.x
 - python-igraph
 - networkx
 - tqdm
@@ -50,6 +50,17 @@ Where:
 * threshold: merging threshold in [0,1]
 * min_com_size: minimum size for communities
 * out_filename: desired filename for the output 
+
+or alternatively
+
+```python
+import angel as a
+an = a.Angel(graph=g, threshold=0.4, min_com_size=3, out_filename="communities.txt")
+an.execute()
+```
+
+Where:
+* g: an igraph.Graph object
 
 ## ArchAngel
 
