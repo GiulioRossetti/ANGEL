@@ -8,9 +8,6 @@ This is achieved by democratically letting each node vote for the communities it
 
 Moreover, we provide also an evolution of Angel, namely **ArchAngel**, designed to extract community from evolving network topologies.
 
-## Citation
-If you use our algorithm please cite the following works:
-
 ## Installation
 You can easily install the updated version of Angel (and Archangel) by using pip:
 
