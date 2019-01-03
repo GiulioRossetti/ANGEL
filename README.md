@@ -15,7 +15,7 @@ If you use our algorithm please cite the following works:
 You can easily install the updated version of Angel (and Archangel) by using pip:
 
 ```
-pip install angel_cd
+pip install angel-cd
 ```
 
 ## Implementation details
