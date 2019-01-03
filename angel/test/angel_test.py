@@ -31,7 +31,9 @@ class DemonTestCase(unittest.TestCase):
         os.remove("angels_coms.txt")
 
     def test_archangel(self):
-        aa = a.ArchAngel("sgraph.txt", threshold=0.4, match_threshold=0.3)
+
+        aa = a.ArchAngel("%s/sgraph.txt" % os.path.dirname(os.path.abspath(__file__)),
+                         threshold=0.4, match_threshold=0.3)
         coms = aa.execute()
         self.assertEqual(len(coms), 6)
 
