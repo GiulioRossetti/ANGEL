@@ -129,7 +129,7 @@ class Angel(object):
         cms = {}
         idc = 0
         for c in self.all_communities.values():
-            ls = [int(self.G.vs[x]['name']) for x in c]
+            ls = [self.G.vs[x]['name'] for x in c]
             if len(ls) >= self.min_community_size:
                 cms[idc] = sorted(ls)
                 idc += 1
