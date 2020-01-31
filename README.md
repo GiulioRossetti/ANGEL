@@ -1,4 +1,5 @@
 # ANGEL
+[![PyPI download month](https://img.shields.io/pypi/dm/angel-cd.svg?color=blue&style=plastic)](https://pypi.python.org/pypi/angel-cd/)
 
 Community discovery in complex networks is an interesting problem with a number of applications, especially in the knowledge extraction task in social and information networks. 
 However, many large networks often lack a particular community organization at a global level. 
