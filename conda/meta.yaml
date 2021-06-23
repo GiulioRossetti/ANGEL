@@ -17,6 +17,7 @@ requirements:
     - python>=3.7
     - future
     - tqdm
+    - numpy
     - python-igraph
     - networkx>=2.4
 

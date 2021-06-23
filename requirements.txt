@@ -2,3 +2,4 @@ future
 tqdm
 python-igraph
 networkx>=2.4
+numpy
