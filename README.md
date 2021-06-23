@@ -1,4 +1,6 @@
 # ANGEL
+[![Test and Coverage (Ubuntu)](https://github.com/GiulioRossetti/ANGEL/actions/workflows/test_ubuntu.yml/badge.svg)](https://github.com/GiulioRossetti/ANGEL/actions/workflows/test_ubuntu.yml)
+[![Coverage Status](https://coveralls.io/repos/github/GiulioRossetti/ANGEL/badge.svg?branch=master)](https://coveralls.io/github/GiulioRossetti/ANGEL?branch=master)
 [![PyPI download month](https://img.shields.io/pypi/dm/angel-cd.svg?color=blue&style=plastic)](https://pypi.python.org/pypi/angel-cd/)
 
 Community discovery in complex networks is an interesting problem with a number of applications, especially in the knowledge extraction task in social and information networks. 
@@ -9,11 +11,20 @@ This is achieved by democratically letting each node vote for the communities it
 
 Moreover, we provide also an evolution of Angel, namely **ArchAngel**, designed to extract community from evolving network topologies.
 
+**Note:** Angel has been integrated within [CDlib](http://cdlib.readthedocs.io) a python package dedicated to community detection algorithms, check it out!
+
+
 ## Installation
 You can easily install the updated version of Angel (and Archangel) by using pip:
 
-```
+```bash
 pip install angel-cd
+```
+
+or using conda
+
+```bash
+conda install -c giuliorossetti angel-cd
 ```
 
 ## Implementation details

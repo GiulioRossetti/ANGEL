@@ -1,5 +1,4 @@
-future==0.16.0
-tqdm==4.17.1
+future
+tqdm
 python-igraph
-networkx
-pytest>=3.6
+networkx>=2.4
