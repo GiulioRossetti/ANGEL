@@ -1,6 +1,6 @@
 # ANGEL
 [![Test and Coverage (Ubuntu)](https://github.com/GiulioRossetti/ANGEL/actions/workflows/test_ubuntu.yml/badge.svg)](https://github.com/GiulioRossetti/ANGEL/actions/workflows/test_ubuntu.yml)
-[![Coverage Status](https://coveralls.io/repos/github/GiulioRossetti/ANGEL/badge.svg?branch=master)](https://coveralls.io/github/GiulioRossetti/ANGEL?branch=master)
+[![codecov](https://codecov.io/gh/GiulioRossetti/ANGEL/branch/master/graph/badge.svg?token=3YJOEVK02B)](https://codecov.io/gh/GiulioRossetti/ANGEL)
 [![PyPI download month](https://img.shields.io/pypi/dm/angel-cd.svg?color=blue&style=plastic)](https://pypi.python.org/pypi/angel-cd/)
 
 Community discovery in complex networks is an interesting problem with a number of applications, especially in the knowledge extraction task in social and information networks. 
