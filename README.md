@@ -18,13 +18,13 @@ Moreover, we provide also an evolution of Angel, namely **ArchAngel**, designed 
 You can easily install the updated version of Angel (and Archangel) by using pip:
 
 ```bash
-pip install angel-cd
+pip install angelcd
 ```
 
 or using conda
 
 ```bash
-conda install -c giuliorossetti angel-cd
+conda install -c giuliorossetti angelcd
 ```
 
 ## Implementation details

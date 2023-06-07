@@ -19,8 +19,8 @@ with open(path.join(here, 'README.md'), encoding='utf-8') as f:
 with open(path.join(here, 'requirements.txt'), encoding='utf-8') as f:
     requirements = f.read().splitlines()
 
-setup(name='angel_cd',
-      version='1.0.3',
+setup(name='angelcd',
+      version='2.0.0',
       license='BSD-2-Clause',
       description='Community Discovery algorithm',
       url='https://github.com/GiulioRossetti/ANGEL',
