@@ -19,7 +19,7 @@ with open(path.join(here, 'README.md'), encoding='utf-8') as f:
 with open(path.join(here, 'requirements.txt'), encoding='utf-8') as f:
     requirements = f.read().splitlines()
 
-setup(name='angelcd',
+setup(name='angel_community',
       version='2.0.0',
       license='BSD-2-Clause',
       description='Community Discovery algorithm',
