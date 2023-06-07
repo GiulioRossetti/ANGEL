@@ -1,21 +1,20 @@
-name: publish_conda
+name: Conda skeleton from PyPi publish
 
 on:
-  release:
-    types: [published]
   workflow_dispatch:
-    branches: [ master ]
-    
+    branches: [master]
+
 jobs:
-  publish:
+  test:
     runs-on: ubuntu-latest
+    name: Conda skeleton publish
     steps:
-    - uses: actions/checkout@v1
-    - name: publish-to-conda
-      uses: GiulioRossetti/conda-package-publish-action@v1.1.0
-      with:
-        subdir: 'conda'
-        AnacondaToken: ${{ secrets.ANACONDA_TOKEN }}
-        platforms: 'all'
-        override: true
-        # dry_run: true
+      - name: Publish conda package from PyPI package
+        uses: silvxlabs/conda-skeleton-publish@v2
+        with:
+          pypi_package: "angel_community"
+          python_version: "3.9"
+          build_channels: "conda-forge giuliorossetti"
+          upload_channel: ""
+          access_token: ${{ secrets.ANACONDA_TOKEN }}
+          stable: true
