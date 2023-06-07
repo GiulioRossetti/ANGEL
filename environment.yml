@@ -1,4 +1,4 @@
-name: angel_env
+name: angelcommunity
 channels:
 - conda-forge
 - defaults
