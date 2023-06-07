@@ -355,7 +355,7 @@ class Angel(object):
                 # first run, random choosing of the communities among the neighbors labels
                 if t == 1:
                     if not len(n_neighbors) == 0:
-                        r_label = random.sample(label_freq.keys(), 1)
+                        r_label = random.sample(list(label_freq.keys()), 1)
                         node2label[n] = r_label
                         old_node_to_coms[n] = r_label
                     count += 1
