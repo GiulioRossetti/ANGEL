@@ -12,7 +12,7 @@ jobs:
       - name: Publish conda package from PyPI package
         uses: silvxlabs/conda-skeleton-publish@v2
         with:
-          pypi_package: "angel_community"
+          pypi_package: "angelcommunity"
           python_version: "3.9"
           build_channels: "conda-forge giuliorossetti"
           upload_channel: ""
